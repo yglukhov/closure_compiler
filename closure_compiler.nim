@@ -32,7 +32,7 @@ proc closureCompilerExe(): string =
 #   to extern Field* properties, so that it doesn't rename them.
 proc externsFromNimSourceCode(code: string): string =
     result = ""
-    let p = peg"""offset\s*\:\s*\"{\ident}\""""
+    let p = peg"""\.{\ident}"""
     var matches = code.findAll(p)#.toSet()
     for m in matches.mitems:
         var s : array[1, string]
@@ -118,4 +118,3 @@ when isMainModule:
             compileFileAndRewrite(f, level)
 
     main()
-
