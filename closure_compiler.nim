@@ -42,11 +42,7 @@ proc externsFromNimSourceCode(code: string): string =
     for i in matches.toSet():
         result &= "Object.prototype." & i & ";\n"
 
-proc optimizationLevelOptionForCLI(l: CompilationLevel): string =
-    case l:
-        of SIMPLE_OPTIMIZATIONS: "SIMPLE"
-        of WHITESPACE_ONLY: "WHITESPACE_ONLY"
-        of ADVANCED_OPTIMIZATIONS: "ADVANCED"
+proc optimizationLevelOptionForCLI(lvl: CompilationLevel): string = $lvl
 
 proc compileSource*(sourceCode: string, level: CompilationLevel = SIMPLE_OPTIMIZATIONS): string =
     let compExe = closureCompilerExe()
