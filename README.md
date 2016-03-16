@@ -1,5 +1,5 @@
 # closure-compiler
-Nim binding to [closure compiler](http://closure-compiler.appspot.com) web API.
+Nim wrapper to [closure compiler](https://developers.google.com/closure/compiler/).
 
 # Usage example: nakefile
 ```Nim
@@ -9,7 +9,7 @@ import closure_compiler
 
 task "js", "Create Javascript version":
     direShell nimExe, "js", "main"
-    closure_compiler.compileFileAndRewrite("nimcache" / "main.js", SIMPLE_OPTIMIZATIONS)
+    closure_compiler.compileFileAndRewrite("nimcache" / "main.js", ADVANCED_OPTIMIZATIONS)
     openDefaultBrowser "main.html"
 ```
 [More about nake](https://github.com/fowlmouth/nake)
@@ -26,4 +26,9 @@ optimization. This wrapper fixes those issues by providing an externs list to th
 The list is formed by analizing the source code.
 
 # Performance considerations
-The wrapper will first try to find `closure-compiler` executable and use it. Otherwise it will fall back to web API. Please note that web API has some limitations. It is slower than locally installed version. It may fail with timeout if your generated `js` file is big enough.
+The wrapper will first try to find `java` executable and use it to run closure-compiler embedded in the package. If `java` is not found it will fall back to web API. Please note that web API has some limitations:
+
+* It is slower than locally installed version.
+* There is an input file size limitation.
+* It may fail with timeout if your generated `js` file is complex enough.
+* It doesn't support source map generation.
