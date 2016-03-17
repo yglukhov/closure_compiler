@@ -94,7 +94,7 @@ proc runLocalCompiler(compExe, inputPath: string, level: CompilationLevel, srcMa
         f.close()
     else:
         removeFile(backupPath)
-    #removeFile(externPath)
+    removeFile(externPath)
 
 proc runWebAPICompiler(sourceCode: string, level: CompilationLevel): string =
     let externs = externsFromNimSourceCode(sourceCode)
