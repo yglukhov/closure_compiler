@@ -35,14 +35,15 @@ proc closureCompilerExe(): string =
 # - Some properties are accessed by indexing (in nimCopy) and by dot-syntax. E.g:
 #       myObj["Field1"]
 #       myObj.Field1
+# - Another case is passing properties by "ptr". E.g:
+#       del(myObj, "myMemberSequence", 5)
 #   Closure compiler does not expect non-uniform property access, so we need
 #   to extern such properties, so that it doesn't rename them.
-#   In order to collect such properties, we look for offsets in type definitions:
-#   E.g: {kind: 1, offset: "fnum", len: 0, typ: NTI124, name: "fnum", sons: null}
-#   Here we have to take `fnum` following `offset:`.
+#   In order to collect such properties, we look for anything like a valid
+#   identifier in a JS string literal.
 proc externsFromNimSourceCode(code: string): string =
     result = ""
-    let p = peg"""'offset:' \s* \" {\ident} \" """
+    let p = peg""" \" {\ident} \" """
     var matches = code.findAll(p)
     for m in matches.mitems:
         var s : array[1, string]
