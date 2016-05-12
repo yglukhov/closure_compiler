@@ -95,9 +95,7 @@ proc runLocalCompiler(compExe, inputPath: string, level: CompilationLevel, srcMa
         args.add(["--create_source_map", sourceMapPath,
             "--source_map_location_mapping", backupPath & "|" & extractFilename(backupPath)])
 
-    var cmd_str = findExe("java")
-
-    runProcess(cmd_str, args)
+    runProcess(findExe("java"), args)
 
     if srcMap:
         let f = open(outputPath, fmAppend)
