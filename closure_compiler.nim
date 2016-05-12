@@ -53,15 +53,11 @@ proc externsFromNimSourceCode(code: string): string =
     for i in matches.toSet():
         result &= "Object.prototype." & i & ";\n"
 
-proc runProcess(command: string, args: openarray[string]): tuple[output: string, code: int] =
+proc runProcess(command: string, args: openarray[string]) =
     var process = startProcess(command = command, args = args, options = {poParentStreams, poStdErrToStdOut})
-    result.output = ""
-    result.code = process.waitForExit()
-    if result.code != 0:
-        result.output = process.outputStream().readAll()
-
-proc raiseCompileError(code: int, output: string) =
-    raiseOSError("closure_compiler exit with code: " & $code & "\nMessage: " & output)
+    var exitCode = process.waitForExit()
+    if exitCode != 0:
+        raiseOSError("closure_compiler exit with code: " & $exitCode)
 
 proc runLocalCompiler(compExe, sourceCode: string, level: CompilationLevel): string =
     let externs = externsFromNimSourceCode(sourceCode)
@@ -70,10 +66,9 @@ proc runLocalCompiler(compExe, sourceCode: string, level: CompilationLevel): str
     let outputPath = getTempDir() / "closure_output.js"
     writeFile(externPath, externs)
     writeFile(inputPath, sourceCode)
-    var (output, code) = runProcess(findExe("java"), ["-jar", compExe, inputPath, "--compilation_level", $level,
+
+    runProcess(findExe("java"), ["-jar", compExe, inputPath, "--compilation_level", $level,
         "--externs", externPath, "--js_output_file", outputPath])
-    if code != 0:
-        raiseCompileError(code, output)
     removeFile(inputPath)
     result = readFile(outputPath)
     removeFile(outputPath)
@@ -102,9 +97,8 @@ proc runLocalCompiler(compExe, inputPath: string, level: CompilationLevel, srcMa
 
     var cmd_str = findExe("java")
 
-    var (output, code) = runProcess(cmd_str, args)
-    if code != 0:
-        raiseCompileError(code, output)
+    runProcess(cmd_str, args)
+
     if srcMap:
         let f = open(outputPath, fmAppend)
         f.write("\L//# sourceMappingURL=closure-src-map\L")
