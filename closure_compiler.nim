@@ -140,24 +140,36 @@ when isMainModule:
     proc usage() =
         echo "closure_compiler [-q] [-a|-w] file1 [fileN...]"
 
+    proc printVersion() =
+        let compExe = closureCompilerExe()
+        runProcess(findExe("java"), ["-jar", compExe, "--version"])
+
     proc main() =
         var files = newSeq[string]()
         var level = SIMPLE_OPTIMIZATIONS
         var quiet = false
         for kind, key, val in getopt():
-            case kind:
-                of cmdArgument: files.add(key)
-                of cmdShortOption:
-                    case key:
-                        of "a": level = ADVANCED_OPTIMIZATIONS
-                        of "w": level = WHITESPACE_ONLY
-                        of "q": quiet = true
-                        else:
-                            usage()
-                            return
+            case kind
+            of cmdArgument: files.add(key)
+            of cmdShortOption:
+                case key
+                of "a": level = ADVANCED_OPTIMIZATIONS
+                of "w": level = WHITESPACE_ONLY
+                of "q": quiet = true
                 else:
                     usage()
                     return
+            of cmdLongOption:
+                case key
+                of "version":
+                    printVersion()
+                    return
+                else:
+                    usage()
+                    return
+            else:
+                usage()
+                return
 
         if files.len == 0:
             usage()
