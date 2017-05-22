@@ -16,8 +16,6 @@ proc urlencode(params: openarray[tuple[k : string, v: string]]): string =
 
 proc nimblePath(package: string): string =
     var nimblecmd = "nimble"
-    when defined(windows):
-        nimblecmd &= ".cmd"
     var (nimbleNimxDir, err) = execCmdEx(nimblecmd & " path " & package)
     if err == 0:
         let lines = nimbleNimxDir.splitLines()
