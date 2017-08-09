@@ -1,4 +1,4 @@
-import httpclient, cgi, pegs, sets, os, osproc, strutils, streams
+import httpclient, cgi, pegs, sets, os, osproc, strutils, streams, json
 
 type CompilationLevel* = enum
     SIMPLE_OPTIMIZATIONS
@@ -66,7 +66,7 @@ proc runLocalCompiler(compExe, sourceCode: string, level: CompilationLevel): str
     writeFile(inputPath, sourceCode)
 
     runProcess(findExe("java"), ["-jar", compExe, inputPath, "--compilation_level", $level,
-        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode"])
+        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode", "--jscomp_off=es5Strict", "--strict_mode_input=false"])
     removeFile(inputPath)
     result = readFile(outputPath)
     removeFile(outputPath)
@@ -86,7 +86,7 @@ proc runLocalCompiler(compExe, inputPath: string, level: CompilationLevel, srcMa
     moveFile(inputPath, backupPath)
 
     var args = @["-jar", compExe, backupPath, "--compilation_level", $level,
-        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode"]
+        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode", "--jscomp_off=es5Strict", "--strict_mode_input=false"]
 
     if srcMap:
         let sourceMapPath = workDir / "closure-src-map"
@@ -107,13 +107,26 @@ proc runWebAPICompiler(sourceCode: string, level: CompilationLevel): string =
     let externs = externsFromNimSourceCode(sourceCode)
     var data = urlencode({
         "compilation_level" : $level,
-        "output_format" : "text",
+        "output_format" : "json",
         "output_info" : "compiled_code",
         "js_code" : sourceCode,
         "js_externs" : externs
         })
-    result = postContent("http://closure-compiler.appspot.com/compile", body=data,
-        extraHeaders="Content-type: application/x-www-form-urlencoded")
+    let cl = newHttpClient()
+    cl.headers["Content-type"] = "application/x-www-form-urlencoded"
+    let resp = cl.postContent("http://closure-compiler.appspot.com/compile", body = data)
+    cl.close()
+    var j: JsonNode
+    try:
+        j = parseJson(resp)
+    except:
+        echo "Could not parse closure compiler web api response: ", resp
+        raise
+
+    result = j{"compiledCode"}.getStr()
+    if result.len == 0:
+        echo "Could not compile with closure compiler web api: ", j
+        raise newException(Exception, "Could not compile with closure compiler web api")
 
 proc compileSource*(sourceCode: string, level: CompilationLevel = SIMPLE_OPTIMIZATIONS): string =
     let compExe = closureCompilerExe()
