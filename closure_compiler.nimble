@@ -1,5 +1,5 @@
 # Package
-version = "0.2"
+version = "0.3"
 author = "Yuriy Glukhov"
 description = "Bindings to closure compiler web API"
 license = "MIT"
