@@ -19,7 +19,7 @@ The [Closure Compiler](https://developers.google.com/closure/compiler/) is a too
 
 ## Building it Yourself
 
-Note: The Closure Compiler requires [Java 7 or higher](https://www.java.com/).
+Note: The Closure Compiler requires [Java 8 or higher](https://www.java.com/).
 
 ### Using [Maven](https://maven.apache.org/)
 
@@ -231,7 +231,7 @@ system have been added.</td>
 <table>
   <tr>
     <td>URL</td>
-    <td>https://args4j.dev.java.net/</td>
+    <td>http://args4j.kohsuke.org/</td>
   </tr>
 
   <tr>
@@ -319,7 +319,7 @@ options/arguments in your CUI application.</td>
 <table>
   <tr>
     <td>URL</td>
-    <td>https://sourceforge.net/projects/junit/</td>
+    <td>http://junit.org/junit4/</td>
   </tr>
 
   <tr>
