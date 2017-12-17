@@ -66,7 +66,7 @@ proc runLocalCompiler(compExe, sourceCode: string, level: CompilationLevel): str
     writeFile(inputPath, sourceCode)
 
     runProcess(findExe("java"), ["-jar", compExe, inputPath, "--compilation_level", $level,
-        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode", "--jscomp_off=es5Strict", "--strict_mode_input=false"])
+        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode", "--jscomp_off=es5Strict", "--strict_mode_input=false", "--warning_level=QUIET"])
     removeFile(inputPath)
     result = readFile(outputPath)
     removeFile(outputPath)
@@ -86,7 +86,7 @@ proc runLocalCompiler(compExe, inputPath: string, level: CompilationLevel, srcMa
     moveFile(inputPath, backupPath)
 
     var args = @["-jar", compExe, backupPath, "--compilation_level", $level,
-        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode", "--jscomp_off=es5Strict", "--strict_mode_input=false"]
+        "--externs", externPath, "--js_output_file", outputPath, "--jscomp_off=uselessCode", "--jscomp_off=es5Strict", "--strict_mode_input=false", "--warning_level=QUIET"]
 
     if srcMap:
         let sourceMapPath = workDir / "closure-src-map"
