@@ -55,7 +55,7 @@ proc runProcess(command: string, args: openarray[string]) =
     var process = startProcess(command = command, args = args, options = {poParentStreams, poStdErrToStdOut})
     var exitCode = process.waitForExit()
     if exitCode != 0:
-        raiseOSError("closure_compiler exit with code: " & $exitCode)
+        raiseOSError(OSErrorCode(exitCode), "closure_compiler exit with code: " & $exitCode)
 
 proc runLocalCompiler(compExe, sourceCode: string, level: CompilationLevel): string =
     let externs = externsFromNimSourceCode(sourceCode)
