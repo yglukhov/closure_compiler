@@ -48,7 +48,7 @@ proc externsFromNimSourceCode(code: string): string =
         discard m.match(p, s)
         m = s[0]
 
-    for i in matches.toSet():
+    for i in matches.toHashSet():
         result &= "Object.prototype." & i & ";\n"
 
 proc runProcess(command: string, args: openarray[string]) =
