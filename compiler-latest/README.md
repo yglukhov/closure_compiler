@@ -26,7 +26,7 @@ Note: The Closure Compiler requires [Java 8 or higher](https://www.java.com/).
 1. Download [Maven](https://maven.apache.org/download.cgi).
 
 2. Add sonatype snapshots repository to `~/.m2/settings.xml`:
-   ```
+   ```xml
    <profile>
      <id>allow-snapshots</id>
         <activation><activeByDefault>true</activeByDefault></activation>
@@ -61,7 +61,7 @@ unit tests too).
 6. Disregard the warnings about maven-antrun-plugin and build errors.
 7. Configure the project to use the [Google Eclipse style guide](https://github.com/google/styleguide/blob/gh-pages/eclipse-java-google-style.xml)
 8. Edit `.classpath` in closure-compiler-parent. Delete the `<classpathentry ... kind="src" path="src" ... />` line, then add:
-   ```
+   ```xml
    <classpathentry excluding="com/google/debugging/sourcemap/super/**|com/google/javascript/jscomp/debugger/gwt/DebuggerGwtMain.java|com/google/javascript/jscomp/gwt/|com/google/javascript/jscomp/resources/super-gwt/**" kind="src" path="src"/>
    <classpathentry kind="src" path="target/generated-sources/annotations"/>
    ```
@@ -144,6 +144,7 @@ will re-order the inputs automatically.
  * Check the [official documentation](https://developers.google.com/closure/compiler/)
  * Consult the [FAQ](https://github.com/google/closure-compiler/wiki/FAQ)
  * Search on [Stack Overflow](https://stackoverflow.com/questions/tagged/google-closure-compiler) and in the [Closure Compiler Discuss Group](https://groups.google.com/forum/#!forum/closure-compiler-discuss)
+ * Look through the list of [compiler assumptions](https://github.com/google/closure-compiler/wiki/Compiler-Assumptions).
 2. If you still think you have found a bug, make sure someone hasn't already reported it. See the list of [known issues](https://github.com/google/closure-compiler/issues).
 3. If it hasn't been reported yet, post a new issue. Make sure to add enough detail so that the bug can be recreated. The smaller the reproduction code, the better.
 
@@ -369,6 +370,35 @@ options/arguments in your CUI application.</td>
     <td>Description</td>
     <td>Supporting libraries for protocol buffers,
 an encoding of structured data.</td>
+  </tr>
+
+  <tr>
+    <td>Local Modifications</td>
+    <td>None</td>
+  </tr>
+</table>
+
+### RE2/J
+
+<table>
+  <tr>
+    <td>URL</td>
+    <td>https://github.com/google/re2j</td>
+  </tr>
+
+  <tr>
+    <td>Version</td>
+    <td>1.3</td>
+  </tr>
+
+  <tr>
+    <td>License</td>
+    <td>New BSD License</td>
+  </tr>
+
+  <tr>
+    <td>Description</td>
+    <td>Linear time regular expression matching in Java.</td>
   </tr>
 
   <tr>
