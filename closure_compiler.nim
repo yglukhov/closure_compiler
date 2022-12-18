@@ -146,7 +146,7 @@ proc compileFileAndRewrite*(f: string, level: CompilationLevel = SIMPLE_OPTIMIZA
         writeFile(f, runWebAPICompiler(readFile(f), level))
 
 when isMainModule:
-    import parseopt2
+    import parseopt
 
     proc usage() =
         echo "closure_compiler [-q] [-a|-w] file1 [fileN...]"
